@@ -1,0 +1,23 @@
+# Project Structure
+payment_gateway_project/
+├── .github/
+│   └── workflows/
+│       └── django.yml
+├── payment_gateway/
+│   ├── __init__.py
+│   ├── asgi.py
+│   ├── settings.py
+│   ├── urls.py
+│   └── wsgi.py
+├── api/
+│   ├── __init__.py
+│   ├── admin.py
+│   ├── apps.py
+│   ├── migrations/
+│   ├── models.py
+│   ├── serializers.py
+│   ├── tests.py
+│   ├── urls.py
+│   └── views.py
+├── manage.py
+└── requirements.txt
