@@ -28,7 +28,9 @@ SECRET_KEY = 'django-insecure-1qno4ocf39d!yedn*^!9jvrv^_d=xhj4tw2$bn*of%nh+4^p#8
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    'mock-payment-gateway-service.onrender.com', '127.0.0.1', 'localhost'
+]
 
 BASE_URL = config('BASE_URL', default='http://localhost:8000')
 
