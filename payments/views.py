@@ -103,6 +103,30 @@ class PaymentDetailView(APIView):
                 "message": f"Error retrieving payment details: {str(e)}"
             }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
+class PaymentListView(APIView):
+    """
+    API endpoint for retrieving all payments
+    """
+    def get(self, request, format=None):
+        try:
+            # Retrieve all payments
+            payments = Payment.objects.all()
+            
+            # Serialize the payments
+            serializer = PaymentSerializer(payments, many=True)
+            
+            return Response({
+                "payments": serializer.data,
+                "status": "success",
+                "message": "All payments retrieved successfully."
+            }, status=status.HTTP_200_OK)
+        except Exception as e:
+            logger.error(f"Error retrieving all payments: {str(e)}")
+            return Response({
+                "status": "error",
+                "message": f"Error retrieving payments: {str(e)}"
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
 class PayPalSuccessView(APIView):
     """
     Webhook endpoint for successful PayPal payments
