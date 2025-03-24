@@ -14,7 +14,7 @@ A RESTful API for small businesses to accept payments from customers using PayPa
 ### Initiate a Payment
 
 ```
-POST /api/v1/payments
+POST /api/v1/payments/
 ```
 
 **Request Body:**
@@ -49,23 +49,53 @@ POST /api/v1/payments
 ### Get Payment Status
 
 ```
-GET /api/v1/payments/{id}
+GET api/v1/payments/all/
 ```
 
 **Response:**
 
 ```json
 {
-  "payment": {
-    "id": "PAY-12345678",
-    "customer_name": "John Doe",
-    "customer_email": "john@example.com",
-    "amount": 50.00,
-    "currency": "USD",
-    "status": "completed"
-  },
-  "status": "success",
-  "message": "Payment details retrieved successfully."
+    "payments": [
+        {
+            "id": "bc8797f0-a847-4d96-88a2-fc3a32e1a39a",
+            "customer_name": "John Doe",
+            "customer_email": "john@example.com",
+            "amount": "50.00",
+            "currency": "USD",
+            "status": "failed",
+            "created_at": "2025-03-24T15:59:18.913491Z"
+        },
+        {
+            "id": "444bcdc4-0340-47eb-ac4b-cffd16f27592",
+            "customer_name": "John Doe",
+            "customer_email": "john@example.com",
+            "amount": "50.00",
+            "currency": "USD",
+            "status": "failed",
+            "created_at": "2025-03-24T16:02:46.925681Z"
+        },
+        {
+            "id": "03d280e2-1704-426a-a3c8-3610b7964a15",
+            "customer_name": "John Doe",
+            "customer_email": "john@example.com",
+            "amount": "50.00",
+            "currency": "USD",
+            "status": "failed",
+            "created_at": "2025-03-24T16:07:45.091864Z"
+        },
+        {
+            "id": "38db523e-b739-4387-972f-d1efd2317b58",
+            "customer_name": "John Doe",
+            "customer_email": "john@example.com",
+            "amount": "50.00",
+            "currency": "USD",
+            "status": "processing",
+            "created_at": "2025-03-24T16:12:20.356695Z"
+        }
+    ],
+    "status": "success",
+    "message": "All payments retrieved successfully."
 }
 ```
 
