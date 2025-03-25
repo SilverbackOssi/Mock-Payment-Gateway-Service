@@ -11,7 +11,6 @@ class Payment(models.Model):
     ]
     
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    reference_id = models.CharField(max_length=100, unique=True, blank=True, null=True)
     customer_name = models.CharField(max_length=100)
     customer_email = models.EmailField()
     amount = models.DecimalField(max_digits=10, decimal_places=2)
