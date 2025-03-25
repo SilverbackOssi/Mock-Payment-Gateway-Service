@@ -21,8 +21,7 @@ class PaymentAPITest(TestCase):
             customer_email="test@example.com",
             amount=100.00,
             currency="USD",
-            status="completed",
-            reference_id="test-reference"
+            status="completed"
         )
     
     @responses.activate
