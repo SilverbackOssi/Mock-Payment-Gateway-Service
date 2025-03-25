@@ -52,13 +52,7 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
-    - uses: actions/checkout@v2
-    
-    - name: Deploy to Render
-      env:
-        RENDER_API_KEY: ${{ secrets.RENDER_API_KEY }}
+    - name: Trigger Render Deploy Hook
       run: |
-        # This is a placeholder for a real deployment script
-        # In a real project, you would use Render's API or a similar service
-        echo "Deploying to Render..."
-        # curl -X POST https://api.render.com/v1/services/YOUR_SERVICE_ID/deploys -H "Authorization: Bearer $RENDER_API_KEY"
+        curl -X POST https://api.render.com/deploy/srv-cvgotspopnds73fj0l60?key=wj9_KFf9oUs
+        
