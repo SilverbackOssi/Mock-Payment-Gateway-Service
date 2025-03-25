@@ -1,7 +1,8 @@
 from django.urls import path
-from .views import InitiatePaymentView, PaymentDetailView, PayPalSuccessView, PayPalCancelView, PaymentListView
+from .views import InitiatePaymentView, PaymentDetailView, PayPalSuccessView, PayPalCancelView, PaymentListView, DocumentationView
 
 urlpatterns = [
+    path('', DocumentationView.as_view(), name='default-page'),
     path('v1/payments/', InitiatePaymentView.as_view(), name='initiate-payment'),
     path('v1/payments/all/', PaymentListView.as_view(), name='payment-list'),  
     path('v1/payments/<uuid:id>/', PaymentDetailView.as_view(), name='payment-detail'),
@@ -10,8 +11,6 @@ urlpatterns = [
 ]
 
 '''
-from django.urls import path
-from . import views
 
 urlpatterns = [
     path('initiate-payment/', views.InitiatePaymentView.as_view(), name='initiate-payment'),
