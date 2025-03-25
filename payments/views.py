@@ -1,7 +1,7 @@
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from django.shortcuts import get_object_or_404, redirect
+from django.shortcuts import render, get_object_or_404, redirect
 from django.http import Http404
 from .models import Payment
 from .serializers import PaymentSerializer, PaymentCreateSerializer, PaymentResponseSerializer
@@ -17,6 +17,13 @@ if settings.DEBUG:
     mock_paypal_api()
 
 logger = logging.getLogger(__name__)
+
+class DocumentationView(APIView):
+    """
+    View to display API documentation and allow testing of endpoints.
+    """
+    def get(self, request, format=None):
+        return render(request, 'index.html')
 
 class InitiatePaymentView(APIView):
     """
