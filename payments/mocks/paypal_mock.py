@@ -19,7 +19,7 @@ def mock_paypal_api():
             "id": "mock_order_id",
             "status": "CREATED",
             "links": [
-                {"href": "https://mock-approval-url.com", "rel": "approve"}
+                {"href": "https://approval-url.com", "rel": "approve"}
             ]
         },
         status=201
