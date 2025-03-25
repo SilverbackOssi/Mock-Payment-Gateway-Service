@@ -4,6 +4,9 @@ import json
 import uuid
 from django.conf import settings
 import logging
+import threading
+import time
+from payments.models import Payment
 
 logger = logging.getLogger(__name__)
 
@@ -96,10 +99,12 @@ class PayPalService:
                 if link["rel"] == "approve"
             )
             
-            payment.reference_id = response_data["id"]
-            payment.status = "processing"
             payment.gateway_response = response_data
+            payment.status = "processing"
             payment.save()
+
+            # Start a background thread to verify the payment after 2 seconds
+            threading.Thread(target=self._auto_verify_payment, args=(payment.id,), daemon=True).start()
             
             return payment, approval_url
             
@@ -108,9 +113,22 @@ class PayPalService:
             payment.status = "failed"
             payment.save()
             raise Exception(f"PayPal order creation failed: {str(e)}")
+
+    def _auto_verify_payment(self, payment_id):
+        """Automatically verify the payment after 2 seconds"""
+        time.sleep(2)  # Wait for 2 seconds
+        try:
+            payment = Payment.objects.get(id=payment_id)
+            self.verify_payment(payment)
+            logger.info(f"Auto-verified payment {payment.id} with status {payment.status}")
+        except Payment.DoesNotExist:
+            logger.error(f"Payment {payment_id} does not exist for auto-verification")
+        except Exception as e:
+            logger.error(f"Error during auto-verification of payment {payment_id}: {str(e)}")
     
-    def capture_payment(self, order_id):
+    def capture_payment(self, payment):
         """Capture an approved PayPal payment"""
+        order_id = payment.gateway_response["id"]
         url = f"{self.base_url}/v2/checkout/orders/{order_id}/capture"
         
         access_token = self.get_access_token()
@@ -128,6 +146,11 @@ class PayPalService:
                 logger.error(f"PayPal capture error: {response_data}")
                 raise Exception("Failed to capture PayPal payment")
             
+            # Update payment status to "completed"
+            payment.status = "completed"
+            payment.gateway_response = response_data
+            payment.save()
+            
             return response_data
             
         except Exception as e:
@@ -136,41 +159,42 @@ class PayPalService:
     
     def verify_payment(self, payment):
         """Verify the status of a PayPal payment"""
-        if not payment.reference_id:
-            return payment
-            
-        url = f"{self.base_url}/v2/checkout/orders/{payment.reference_id}"
-        
+        if not payment.gateway_response or "id" not in payment.gateway_response:
+            return payment  # Skip verification if no gateway response is available
+
+        order_id = payment.gateway_response["id"]
+        url = f"{self.base_url}/v2/checkout/orders/{order_id}"
+
         access_token = self.get_access_token()
-        
+
         headers = {
             "Content-Type": "application/json",
             "Authorization": f"Bearer {access_token}"
         }
-        
+
         try:
             response = requests.get(url, headers=headers)
             response_data = response.json()
-            
+
             if response.status_code != 200:
                 logger.error(f"PayPal verification error: {response_data}")
                 return payment
-            
+
             # Update payment status based on PayPal status
             paypal_status = response_data.get("status", "")
-            
+
             if paypal_status == "COMPLETED":
                 payment.status = "completed"
             elif paypal_status == "APPROVED":
                 payment.status = "processing"
             elif paypal_status in ["VOIDED", "DECLINED"]:
                 payment.status = "failed"
-            
+
             payment.gateway_response = response_data
             payment.save()
-            
+
             return payment
-            
+
         except Exception as e:
             logger.error(f"PayPal verification exception: {str(e)}")
             return payment
