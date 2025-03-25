@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Documentation</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container">
+        <h1 class="mt-5">Payment Gateway API Documentation</h1>
+        <p>This page provides documentation for the Payment Gateway API and allows you to test two endpoints.</p>
+
+        <h2 class="mt-4">Endpoints</h2>
+        <h3>1. Initiate Payment</h3>
+        <p><strong>POST</strong> /api/payments/initiate/</p>
+        <p>Use this endpoint to initiate a PayPal payment.</p>
+        <form id="initiatePaymentForm">
+            <div class="form-group">
+                <label for="amount">Amount:</label>
+                <input type="number" class="form-control" id="amount" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Test Initiate Payment</button>
+        </form>
+        <pre id="initiatePaymentResponse"></pre>
+
+        <h3 class="mt-4">2. Payment Details</h3>
+        <p><strong>GET</strong> /api/payments/<span id="paymentId">[payment_id]</span>/</p>
+        <p>Use this endpoint to retrieve details of a specific payment.</p>
+        <form id="paymentDetailForm">
+            <div class="form-group">
+                <label for="paymentIdInput">Payment ID:</label>
+                <input type="text" class="form-control" id="paymentIdInput" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Test Payment Details</button>
+        </form>
+        <pre id="paymentDetailResponse"></pre>
+    </div>
+
+    <script>
+        document.getElementById('initiatePaymentForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const amount = document.getElementById('amount').value;
+
+            fetch('/api/payments/initiate/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ amount: amount }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('initiatePaymentResponse').textContent = JSON.stringify(data, null, 2);
+            })
+            .catch(error => {
+                document.getElementById('initiatePaymentResponse').textContent = 'Error: ' + error;
+            });
+        });
+
+        document.getElementById('paymentDetailForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const paymentId = document.getElementById('paymentIdInput').value;
+
+            fetch(`/api/payments/${paymentId}/`)
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('paymentDetailResponse').textContent = JSON.stringify(data, null, 2);
+            })
+            .catch(error => {
+                document.getElementById('paymentDetailResponse').textContent = 'Error: ' + error;
+            });
+        });
+    </script>
+</body>
+</html>
