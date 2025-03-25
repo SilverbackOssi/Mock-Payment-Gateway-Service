@@ -6,6 +6,14 @@
     <title>API Documentation</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="icon" href="https://favicon.io/assets/img/navbar-logo-2x.d9aeaef3.png" type="image/x-icon">
+    <style>
+        .response {
+            border: 2px solid black;
+            border-radius: 8px;
+            margin: 10px;
+            padding: 10px;
+        }
+    </style>    
 </head>
 <body>
     <div class="container">
@@ -35,7 +43,7 @@
             </div>
             <button type="submit" class="btn btn-primary">Test Initiate Payment</button>
         </form>
-        <pre id="initiatePaymentResponse"></pre>
+        <pre id="initiatePaymentResponse" class="response"></pre>
 
         <h3 class="mt-4">2. Payment Details</h3>
         <p><strong>GET</strong> /api/payments/all/</p>
@@ -43,7 +51,7 @@
         <form id="paymentDetailForm">
             <button type="submit" class="btn btn-primary">Test Payment Details</button>
         </form>
-        <pre id="paymentDetailResponse"></pre>
+        <pre id="paymentDetailResponse" class="response" ></pre>
     </div>
 
     <script>
