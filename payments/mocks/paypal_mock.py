@@ -1,21 +1,3 @@
-# def get_paypal_access_token():
-#     return {
-#         'access_token': 'mock_access_token',
-#         'expires_in': 3600
-#     }
-
-# def create_payment_mock():
-#     return {
-#         'id': 'mock_payment_id',
-#         'state': 'approved'
-#     }
-
-# def mock_paypal_error():
-#     return {
-#         'error': 'invalid_client',
-#         'error_description': 'Client Authentication failed'
-#     }
-
 import responses
 import json
 
@@ -49,4 +31,12 @@ def mock_paypal_api():
         "https://api-m.sandbox.paypal.com/v2/checkout/orders/mock_order_id/capture",
         json={"status": "COMPLETED"},
         status=201
+    )
+
+    # Mock the verify payment endpoint
+    responses.add(
+        responses.GET,
+        "https://api-m.sandbox.paypal.com/v2/checkout/orders/mock_order_id",
+        json={"id": "mock_order_id", "status": "COMPLETED"},
+        status=200
     )
